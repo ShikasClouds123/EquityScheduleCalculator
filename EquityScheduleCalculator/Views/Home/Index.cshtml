@@ -1,0 +1,188 @@
+﻿@model EquityScheduleCalculator.Models.EquityModel
+
+@{
+    ViewData["Title"] = "Equity Schedule Calculator";
+    var equitySchedule = ViewBag.EquitySchedule as List<EquityScheduleCalculator.Models.EquityScheduleEntry>;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; 
+        }
+
+        .container {
+            max-width: 1100px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #334155; 
+        }
+
+        .form-input {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+            .form-input:focus {
+                border-color: #3b82f6; 
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); 
+                outline: none;
+            }
+
+        .btn-primary {
+            background-color: #3b82f6; 
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .btn-primary:hover {
+                background-color: #2563eb; 
+                transform: translateY(-1px); 
+            }
+
+            .btn-primary:active {
+                transform: translateY(0); 
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+        .table-custom {
+            width: 100%;
+            min-width: 800px; 
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden; 
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+            .table-custom thead th {
+                background-color: #000000; 
+                color: white;
+                padding: 1rem 1.5rem;
+                text-align: left;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .table-custom tbody tr:nth-child(even) {
+                background-color: #e2e8f0; 
+            }
+
+            .table-custom tbody tr:nth-child(odd) {
+                background-color: #f8fafc; 
+            }
+
+            .table-custom tbody td {
+                padding: 1rem 1.5rem;
+                border-bottom: 1px solid #e2e8f0;
+                color: #334155;
+            }
+
+            .table-custom tbody tr:last-child td {
+                border-bottom: none; 
+            }
+
+            .table-custom tbody tr:hover {
+                background-color: #d1d5db; 
+            }
+
+            .table-custom tbody tr.final-balance td {
+                background-color: #dcfce7; 
+                font-weight: 700;
+                color: #10b981; 
+                border-top: 2px solid #a7f3d0; 
+            }
+
+        .validation-message {
+            color: #ef4444; 
+            font-size: 0.875rem; 
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+
+<div class="container mx-auto p-6 bg-white rounded-xl shadow-lg my-8">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">Equity Schedule Calculator</h1>
+
+    <form asp-controller="Home" asp-action="CalculateEquity" method="post" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label asp-for="SellingPrice" class="block form-label mb-1">Selling Price</label>
+                <input asp-for="SellingPrice" type="number" step="0.01" class="form-input w-full" placeholder="e.g., 50000" />
+                <span asp-validation-for="SellingPrice" class="validation-message block"></span>
+            </div>
+
+            <div>
+                <label asp-for="ReservationDate" class="block form-label mb-1">Reservation Date</label>
+                <input asp-for="ReservationDate" type="date" class="form-input w-full" />
+                <span asp-validation-for="ReservationDate" class="validation-message block"></span>
+            </div>
+
+            <div>
+                <label asp-for="Term" class="block form-label mb-1">Term (Months)</label>
+                <input asp-for="Term" type="number" class="form-input w-full" placeholder="e.g., 6" />
+                <span asp-validation-for="Term" class="validation-message block"></span>
+            </div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+            <button type="submit" class="btn-primary">GO</button>
+        </div>
+    </form>
+
+    @if (equitySchedule != null && equitySchedule.Any())
+    {
+        <h2 class="text-2xl font-bold text-gray-700 mt-12 mb-6 text-center">Payment Breakdown</h2>
+        <div class="overflow-x-auto">
+            <table class="table-custom min-w-full">
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Due Date</th>
+                        <th>Balance</th>
+                        <th>Amount</th>
+                        <th>Interest</th>
+                        <th>Insurance</th>
+                        <th>Total Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in equitySchedule)
+                    {
+                        <tr class="@(entry.Balance == 0 && entry.Term == Model.Term ? "final-balance" : "")">
+                            <td>@entry.Term</td>
+                            <td>@entry.DueDate.ToString("MM/dd/yyyy")</td>
+                            <td>@entry.Balance.ToString("C2")</td>
+                            <td>@entry.PaymentInfo.Amount.ToString("C2")</td>
+                            <td>@entry.PaymentInfo.Interest.ToString("C2")</td>
+                            <td>@entry.PaymentInfo.Insurance.ToString("C2")</td>
+                            <td>@entry.PaymentInfo.Total.ToString("C2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        console.log("Equity Schedule app loaded.");
+    </script>
+}

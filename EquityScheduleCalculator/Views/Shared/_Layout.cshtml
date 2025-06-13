@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyWebApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-black-100 text-white-800">
+    <header class="bg-black py-4 shadow-md">
+        <nav class="container mx-auto px-4 flex justify-between items-center">
+            <a class="text-white text-2xl font-bold" asp-area="" asp-controller="Home" asp-action="Index">EquitySchedule</a>
+            <div class="space-x-4">
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mx-auto px-4 mt-6">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+@*     <footer class="border-t border-gray-300 text-gray-600 py-4 text-center mt-8">
+        <div class="container mx-auto px-4">
+            &copy; @DateTime.Now.Year
+        </div>
+    </footer> *@
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
