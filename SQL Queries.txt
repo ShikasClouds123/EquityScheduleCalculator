@@ -1,0 +1,46 @@
+Select statement to generate the following result  (note: in SellingPrice use Lotprice if type is Lot only else use Houseprice)
+
+SELECT
+    c.CustomerNo,
+    c.UnitID,
+    c.LastName,
+    c.FirstName,
+    c.MiddleName,
+    cd.EquityTerm,
+    cd.EquityAmount,
+    cd.MATerm,
+    cd.MAAmount,
+    cd.MIR,
+    cd.FIRE,
+    cd.LoanAmt,
+    cd.IntRate,
+    CASE
+        WHEN i.Type = 'Lot only' THEN i.LotPrice
+        ELSE i.HousePrice
+    END AS SellingPrice
+FROM
+    CustomerTbl AS c
+JOIN
+    CustomerDtl AS cd ON c.CustomerNo = cd.CustomerNo
+JOIN
+    InventoryTbl AS i ON c.UnitID = i.UnitID;
+
+
+
+Update Statement to update the IntRate of customerNo 739662 from 10 to 21
+
+UPDATE CustomerDtl
+SET IntRate = 21
+WHERE CustomerNo = 739662;
+
+
+Delete Statement to Delete customer TRAMPE, MARJORIE RIVERA in both table
+
+-- First, delete from CustomerDtl (child table)
+DELETE FROM CustomerDtl
+WHERE CustomerNo = (SELECT CustomerNo FROM CustomerTbl WHERE LastName = 'TRAMPE' AND FirstName = 'MARJORIE' AND MiddleName = 'RIVERA');
+
+-- Then, delete from CustomerTbl (parent table)
+DELETE FROM CustomerTbl
+WHERE LastName = 'TRAMPE' AND FirstName = 'MARJORIE' AND MiddleName = 'RIVERA';
+
