@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EquityScheduleCalculator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e42f661dbdfd9bf9fbe72f9f0ebbe1d1a0fd312c")]
 [assembly: System.Reflection.AssemblyProductAttribute("EquityScheduleCalculator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EquityScheduleCalculator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

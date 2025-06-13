@@ -44,7 +44,7 @@ namespace EquityScheduleCalculator.Controllers
                     }
                     else
                     {
-                        interestForThisPeriod = 0.05 * currentRemainingBalance;
+                        interestForThisPeriod = (currentRemainingBalance - principalPerPeriod) * 0.05;
                         principalPaymentForThisPeriod = principalPerPeriod;
                         insuranceForThisPeriod = 0.01 * principalPaymentForThisPeriod;
                     }
